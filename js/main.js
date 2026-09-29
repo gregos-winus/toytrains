@@ -7,7 +7,7 @@ import { initLang, setLang, getLang, applyI18n, t, tr } from './i18n.js';
 import { createLayout, serialize, deserialize, billOfMaterials, findPiece } from './model.js';
 import { trackType } from './catalog/tracks.js';
 import { stepTrains } from './sim.js';
-import { buildExampleLayout } from './examples.js';
+import { LAYOUTS, layoutById } from './layouts/index.js';
 import { deleteSelection, rotateSelection, flipLast, removeLast } from './editor.js';
 import { DEG } from './geom.js';
 
@@ -35,7 +35,13 @@ import('./view3d.js').then(({ View3D }) => {
 
 // ------------------------------------------------------------ initial layout
 const saved = app.loadLocal();
-app.setLayout(saved || buildExampleLayout(getLang() === 'fr' ? 'Réseau de démonstration' : 'Demo layout'));
+if (saved) app.setLayout(saved);
+else {
+  const def0 = layoutById('mainline');
+  const L0 = def0.build();
+  L0.name = tr(def0.name);
+  app.setLayout(L0);
+}
 
 // ------------------------------------------------------------------ top bar
 const $ = (id) => document.getElementById(id);
@@ -59,12 +65,31 @@ $('btn-new').onclick = () => {
   plan.fit();
   view3d?.resetCamera();
 };
-$('btn-example').onclick = () => {
-  if (!confirm(t('confirmExample'))) return;
-  app.setLayout(buildExampleLayout(getLang() === 'fr' ? 'Réseau de démonstration' : 'Demo layout'));
-  plan.fit();
-  view3d?.resetCamera();
-};
+function renderLayoutList() {
+  const list = $('layouts-list');
+  list.innerHTML = '';
+  for (const def of LAYOUTS) {
+    const card = document.createElement('button');
+    card.className = 'layout-card';
+    const stars = '★'.repeat(def.level) + '☆'.repeat(3 - def.level);
+    card.innerHTML = `<span class="lvl" title="${t(`level${def.level}`)}">${stars} <em>${t(`level${def.level}`)}</em></span>
+      <strong></strong><span class="desc"></span>`;
+    card.querySelector('strong').textContent = tr(def.name);
+    card.querySelector('.desc').textContent = tr(def.desc);
+    card.onclick = () => {
+      if (!confirm(t('confirmExample'))) return;
+      $('layouts-dlg').close();
+      const L = def.build();
+      L.name = tr(def.name);
+      app.setLayout(L);
+      plan.fit();
+      view3d?.resetCamera();
+    };
+    list.append(card);
+  }
+}
+$('btn-example').onclick = () => { renderLayoutList(); $('layouts-dlg').showModal(); };
+$('layouts-close').onclick = () => $('layouts-dlg').close();
 $('btn-save').onclick = () => download(`${fileBase()}.json`, JSON.stringify(serialize(app.layout), null, 1));
 $('btn-open').onclick = () => $('file-input').click();
 $('file-input').onchange = async (e) => {

@@ -30,7 +30,7 @@
       <button id="btn-new" data-i18n="new">New</button>
       <button id="btn-open" data-i18n="open">Open…</button>
       <button id="btn-save" data-i18n="save">Save</button>
-      <button id="btn-example" data-i18n="example">Example</button>
+      <button id="btn-example" data-i18n="layouts">Layouts…</button>
       <button id="btn-csv" data-i18n="exportCsv">Parts list (CSV)</button>
       <span class="sep"></span>
       <button id="btn-undo" data-i18n-title="undo" title="Undo">↶</button>
@@ -85,6 +85,14 @@
   </main>
 
   <div id="toasts"></div>
+
+  <dialog id="layouts-dlg">
+    <div class="help-head">
+      <strong data-i18n="layoutsTitle">Example layouts</strong>
+      <button id="layouts-close" data-i18n="close">Close</button>
+    </div>
+    <div id="layouts-list" class="layouts-list"></div>
+  </dialog>
 
   <dialog id="help">
     <div class="help-head">

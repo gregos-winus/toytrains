@@ -241,7 +241,9 @@ export function stepTrains(layout, dt) {
     if (sp < target) train.speed = Math.min(target, sp + ACCEL * dt);
     else if (sp > target) train.speed = Math.max(target, sp - BRAKE * dt);
     if (train.speed <= 0) continue;
-    const res = advance(layout, train.head, train.speed * dt, true);
+    const want = train.speed * dt;
+    const res = advance(layout, train.head, want, true);
+    train.odo = (train.odo || 0) + want - (res.blocked ? res.rest : 0);
     train.head = res.cur;
     for (const e of res.entered) train.trail.push(e);
     for (const pid of res.thrown) events.push({ type: 'thrown', train, pid });

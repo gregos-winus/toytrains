@@ -4,7 +4,7 @@ import { pieceGeometry, isSwitchable, BED_WIDTH, GAUGE } from './catalog/tracks.
 import { sceneryType } from './catalog/scenery.js';
 import {
   worldEndpoints, routePose, openEndpoints, findPiece, applyBrush, terrainHeight,
-  PAINTS, WATER_LEVEL,
+  PAINTS, WATER_LEVEL, TUNNEL_CLEARANCE,
 } from './model.js';
 import { carPoses, nearestTrackPoint } from './sim.js';
 import {
@@ -232,6 +232,37 @@ export class PlanView {
       ctx.strokeStyle = `rgb(${120 + tint},${112 + tint},${100 + tint})`;
       ctx.lineWidth = Math.max(1.5, BED_WIDTH * sc);
       for (const r of c.routes) { this.pathOf(r.pts); ctx.stroke(); }
+      // tunnels (dark, dashed) and bridges (girders)
+      const T = L.terrain;
+      for (const r of c.routes) {
+        let run = null;
+        const flush = (kind) => {
+          if (!run || run.pts.length < 2) { run = null; return; }
+          if (run.kind === 'tunnel') {
+            ctx.strokeStyle = 'rgba(25,22,20,0.62)';
+            ctx.lineWidth = Math.max(2, (BED_WIDTH + 6) * sc);
+            this.pathOf(run.pts); ctx.stroke();
+            ctx.setLineDash([6, 5]);
+            ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+            ctx.lineWidth = 1;
+            for (const off of [BED_WIDTH / 2 + 3, -BED_WIDTH / 2 - 3]) { this.pathOf(this.offsetPts(run.pts, off)); ctx.stroke(); }
+            ctx.setLineDash([]);
+          } else {
+            ctx.strokeStyle = '#2d3942';
+            ctx.lineWidth = Math.max(1, 3 * sc);
+            for (const off of [21, -21]) { this.pathOf(this.offsetPts(run.pts, off)); ctx.stroke(); }
+          }
+          void kind;
+          run = null;
+        };
+        for (const q of r.pts) {
+          const gnd = terrainHeight(T, q.x, q.y);
+          const kind = gnd > q.z + TUNNEL_CLEARANCE ? 'tunnel' : q.z - gnd > 20 ? 'bridge' : null;
+          if (run && run.kind !== kind) { const last = run.pts[run.pts.length - 1]; flush(); if (kind) run = { kind, pts: [last] }; }
+          if (kind) { if (!run) run = { kind, pts: [] }; run.pts.push(q); }
+        }
+        flush();
+      }
       // sleepers
       if (sc > 1.1) {
         ctx.strokeStyle = '#4a3a2c';

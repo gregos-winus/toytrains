@@ -16,7 +16,7 @@ automatically in the browser and can be exported to a `.json` file.
 
 | Area | Content |
 |---|---|
-| **Top bar** | New / Open / Save / Example layout, parts list export (CSV), undo / redo, view mode (Plan, Split, 3D), language, help |
+| **Top bar** | New / Open / Save / Layouts… (example layouts), parts list export (CSV), undo / redo, view mode (Plan, Split, 3D), language, help |
 | **Left panel** | Four tabs: **Track** (Fleischmann catalogue), **Relief** (terrain brushes), **Models** (scenery) and **Trains** (rolling stock and consists) |
 | **Centre** | The **plan** (2D, top view) and/or the **3D view** |
 | **Right panel** | **Driver's cab** (train controls), **Properties** of the selection, **Layout** (baseboard size, statistics, parts list) |
@@ -108,8 +108,14 @@ Open the **Relief** tab and drag on the plan:
 | **Paint** | paints the ground cover: grass, meadow, soil, rock, sand, snow |
 
 * **Radius** and **Strength** set the brush size and speed.
-* **Tunnels**: tracks keep their own height. If the terrain is higher than the track,
-  the train disappears into the hill: add **tunnel portals** (Models tab) at the ends.
+* **Tunnels**: tracks keep their own height. Where the terrain rises more than 85 mm
+  above a track, the track runs in a **tunnel**: the 3D view digs a cutting up to the
+  hill, opens the mouth, builds a stone **portal** (a double portal for parallel
+  tracks) and a vaulted tube inside. In the plan, tunnel sections are shaded and dashed.
+* **Cuttings**: terrain slightly higher than a track is dug away automatically in 3D
+  so the track always stays visible.
+* **Bridges**: track more than 20 mm above the ground is carried on steel plate
+  girders and stone piers (no pier is placed on a track passing underneath).
 * **Water**: terrain lowered below −8 mm becomes a lake or a river.
 * **Build embankments under raised tracks** fills the terrain under elevated track with
   realistic slopes, instead of piers.
@@ -120,12 +126,15 @@ Open the **Relief** tab and drag on the plan:
 
 The **Models** tab offers generic HO models: station building, platform, engine shed,
 signal box, water tower, semaphore signal, houses, half-timbered house, church, factory,
-barn, trees, bushes, rocks, roads, tunnel portals and cars.
+town houses with shops, barn, trees, bushes, rocks, roads, street lamps, fences,
+people, tunnel portals and cars. Buildings have textured walls (plaster, brick,
+half-timbering), tiled roofs, windows, doors and chimneys.
 
 1. Click a model, then click on the plan to place it (<kbd>Q</kbd>/<kbd>E</kbd> rotate the ghost).
 2. Select a placed model to change its rotation, **scale** or height.
    Models sit automatically on the terrain; set a height to force it
-   (e.g. for a tunnel portal at track level).
+   (e.g. for a decorative portal at track level; portals are otherwise created
+   automatically at every tunnel mouth).
 
 ---
 
@@ -167,11 +176,38 @@ Trains stop at the end of the track and when they would hit another train.
   the layout for real (semicolon separated, opens in Excel/LibreOffice).
 * The **Layout** panel shows the baseboard size (editable), the number of pieces, the
   total track length, the number of open ends and the parts list.
-* **Example** loads a demonstration layout (oval with station loop, siding, tunnel, lake).
+* **Layouts…** opens the library of example layouts (see §7).
 
 ---
 
-## 7. Fleischmann Profi-Gleis catalogue
+## 7. Example layouts
+
+| Layout | Level | Content |
+|---|---|---|
+| **Starter oval** | ★☆☆ | R1 oval, one siding with buffer stop, small station — 1.8 × 1.0 m |
+| **Village station** | ★★☆ | R2 oval, passing loop, siding with engine shed, tunnel under a hill, lake — 2.4 × 1.2 m |
+| **Figure of eight** | ★★☆ | Figure of eight on the 36° crossing 6160, goods siding, lake, village — 3.2 × 0.95 m |
+| **Double-track main line** | ★★★ | Double track R1/R2 (63.5 mm apart), two crossovers, through station with a platform loop, three-track yard with engine shed, town, double-track tunnel — 3.6 × 1.6 m |
+| **Mountain line** | ★★★ | Two-level figure of eight: 3 % climb on a viaduct over a lake, crossing over itself, mountain station with siding, long tunnel — 3.8 × 1.1 m |
+
+All example layouts are made of real Fleischmann pieces: their parts list can be
+exported and the loops close exactly.
+
+---
+
+## 8. 3D view
+
+* Textured terrain (grass, rock on steep slopes, sand, snow), grass tufts, animated
+  water, gravel ballast, wooden sleepers and rails with a bright running surface.
+* Detailed rolling stock: liveries with windows and lettering, bogies, spoked wheels
+  that turn, steam-locomotive coupling and connecting rods, smoke, head lamps (white at
+  the front of the train).
+* Cameras: **Orbit**, **Follow** (behind the active train) and **Cab** (driver's view,
+  even through the tunnels).
+
+---
+
+## 9. Fleischmann Profi-Gleis catalogue
 
 | Ref. | Piece | Geometry |
 |---|---|---|
@@ -221,7 +257,7 @@ Lengths are approximate (over buffers) and the 3D models are simplified.
 
 ---
 
-## 8. Keyboard shortcuts
+## 10. Keyboard shortcuts
 
 | Key | Action |
 |---|---|

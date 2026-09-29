@@ -13,7 +13,7 @@ export const PAINTS = [
   { id: 'grass', color: [96, 140, 70] },
   { id: 'meadow', color: [138, 170, 86] },
   { id: 'soil', color: [128, 98, 66] },
-  { id: 'rock', color: [140, 136, 128] },
+  { id: 'rock', color: [118, 112, 104] },
   { id: 'sand', color: [205, 186, 140] },
   { id: 'snow', color: [236, 240, 244] },
 ];
@@ -122,12 +122,12 @@ export function applyBrush(terrain, cx, cy, opts) {
 }
 
 // Raise the terrain under tracks that run above it (embankments).
-export function buildEmbankments(layout) {
+export function buildEmbankments(layout, pieces = layout.pieces) {
   const t = layout.terrain;
   const { cell, nx, ny, heights } = t;
   const inner = 24, outer = 70;
   const target = new Float32Array(nx * ny).fill(-Infinity);
-  for (const p of layout.pieces) {
+  for (const p of pieces) {
     const g = pieceGeometry(p);
     if (!g) continue;
     for (const r of g.routes) {
@@ -383,4 +383,66 @@ export function deserialize(data) {
   for (const t of layout.trains) maxId = Math.max(maxId, t.id);
   layout.nextId = Math.max(data.nextId || 1, maxId + 1);
   return layout;
+}
+
+// ---------------------------------------------------------------------------
+// Track samples, tunnels and bridges (shared by the 2D and 3D views)
+// ---------------------------------------------------------------------------
+
+export const TUNNEL_CLEARANCE = 85; // terrain this high above the rails = tunnel
+export const VAULT_HEIGHT = 78;     // inner height of a tunnel vault
+export const VAULT_HALF_WIDTH = 27;
+
+// Samples along every route of every piece:
+// [{pid, ri, s, x, y, z, a, ground, tunnel}], grouped per route in `routes`.
+export function trackSamples(layout, step = 8) {
+  const routes = [];
+  const T = layout.terrain;
+  for (const p of layout.pieces) {
+    const g = pieceGeometry(p);
+    if (!g) continue;
+    for (const r of g.routes) {
+      const n = Math.max(2, Math.ceil(r.len / step));
+      const pts = [];
+      for (let i = 0; i <= n; i++) {
+        const s = (r.len * i) / n;
+        const q = routePose(p, g, r, s);
+        const ground = terrainHeight(T, q.x, q.y);
+        pts.push({ pid: p.id, ri: r.idx, s, x: q.x, y: q.y, z: q.z, a: q.a, ground, tunnel: ground > q.z + TUNNEL_CLEARANCE });
+      }
+      // ignore tiny tunnel fragments (a single bump over the track)
+      let i = 0;
+      while (i < pts.length) {
+        if (!pts[i].tunnel) { i++; continue; }
+        let j = i;
+        while (j < pts.length && pts[j].tunnel) j++;
+        const touchesEnd = i === 0 || j === pts.length;
+        if (!touchesEnd && j - i < 3) for (let k = i; k < j; k++) pts[k].tunnel = false;
+        i = j;
+      }
+      routes.push({ pid: p.id, ri: r.idx, pts });
+    }
+  }
+  return routes;
+}
+
+// Tunnel portals: where a route passes from open air into a tunnel.
+// Each portal: {x, y, z, a, top} with `a` pointing out of the tunnel and
+// `top` the terrain height just inside.
+export function tunnelPortals(routes) {
+  const out = [];
+  for (const r of routes) {
+    const pts = r.pts;
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1], b = pts[i];
+      if (a.tunnel === b.tunnel) continue;
+      const inside = a.tunnel ? a : b;
+      const outside = a.tunnel ? b : a;
+      const x = (a.x + b.x) / 2, y = (a.y + b.y) / 2;
+      const dir = Math.atan2(outside.y - inside.y, outside.x - inside.x);
+      if (out.some((p) => Math.hypot(p.x - x, p.y - y) < 30 && angleDiff(p.a, dir) < 0.6)) continue;
+      out.push({ x, y, z: (a.z + b.z) / 2, a: dir, top: inside.ground });
+    }
+  }
+  return out;
 }

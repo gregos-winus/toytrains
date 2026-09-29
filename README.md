@@ -20,16 +20,28 @@ and **run Fleischmann trains** on the layout — in a 2D plan and in 3D.
   * gradients (height at each end of every piece), piers generated under raised track;
   * statistics and **parts list** (bill of materials) exportable as CSV.
 * **Relief**: raise, lower, smooth and flatten the terrain, paint the ground cover,
-  lakes and rivers, tunnels, automatic embankments under raised track.
+  lakes and rivers, automatic embankments under raised track.
+* **Tunnels and bridges built automatically** in 3D: cuttings, open tunnel mouths with
+  stone portals (double portals for double track) and vaulted tubes, plate-girder
+  bridges on stone piers.
 * **Scenery models**: station, platform, engine shed, signal box, water tower, signals,
-  houses, church, factory, barn, trees, rocks, roads, tunnel portals, cars…
+  houses, town houses with shops, church, factory, barn, trees, rocks, roads, lamps,
+  fences, people, tunnel portals, cars… with textured walls and tiled roofs.
+* **Detailed rolling stock**: liveries with windows and lettering, bogies, turning
+  spoked wheels, steam-locomotive rods, smoke, head lamps.
+* **Procedural textures** (grass, gravel ballast, wooden sleepers, brick, stone, roof
+  tiles, parquet…) generated in the browser — no image to download.
 * **Trains**: Fleischmann locomotives, coaches and wagons, consist builder and
   ready-made trains, throttle with inertia, scale speed in km/h, reversing, shuttle mode,
   turnouts forced when trailed, stop at buffers and before collisions.
 * **Views**: 2D plan (editing) and 3D (three.js) with orbit, follow and cab cameras;
   turnouts can be switched in both views.
-* Automatic saving in the browser, `.json` import/export, example layout.
+* **Five example layouts**, from a starter oval to a double-track main line with
+  station and yard and a two-level mountain line.
+* Automatic saving in the browser, `.json` import/export.
 * User interface and documentation in **English and French**.
+
+![Double-track tunnel with automatic portal](docs/img/tunnel.png)
 
 ## Documentation
 
@@ -84,6 +96,9 @@ js/
   editor.js                 editing operations
   plan2d.js                 2D plan view (canvas)
   view3d.js, models3d.js    3D view and procedural models (three.js)
+  carve.js                  terrain carving for cuttings and tunnel mouths
+  textures.js               procedural canvas textures
+  layouts/                  example layouts and the builder used to draw them
   panels.js, main.js, app.js, i18n.js   user interface
 docs/                 user guides (en, fr) and screenshots
 tests/                unit tests (node:test)

@@ -70,25 +70,7 @@ export function buildExampleLayout(name = 'Demo') {
     }
   }
 
-  // --- tunnel portals where the left curve enters/leaves the hill
-  const tunnelPts = [];
-  for (const p of left) {
-    const g = pieceGeometry(p);
-    const r = g.routes[0];
-    for (let s = 0; s <= r.len; s += 5) tunnelPts.push(routePose(p, g, r, s));
-  }
-  const inside = tunnelPts.map((q) => terrainHeight(T, q.x, q.y) > 75);
-  const first = inside.indexOf(true);
-  const last = inside.lastIndexOf(true);
   const scen = [];
-  if (first > 0) {
-    const q = tunnelPts[first];
-    scen.push({ kind: 'tunnel', x: q.x, y: q.y, rot: q.a, z: 0 });
-  }
-  if (last > 0 && last < tunnelPts.length - 1) {
-    const q = tunnelPts[last];
-    scen.push({ kind: 'tunnel', x: q.x, y: q.y, rot: q.a + Math.PI, z: 0 });
-  }
 
   // --- scenery
   scen.push(

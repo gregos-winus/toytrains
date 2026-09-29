@@ -16,7 +16,7 @@ enregistré automatiquement dans le navigateur et peut être exporté dans un fi
 
 | Zone | Contenu |
 |---|---|
-| **Barre du haut** | Nouveau / Ouvrir / Enregistrer / Exemple, export de la nomenclature (CSV), annuler / rétablir, mode d'affichage (Plan, Double, 3D), langue, aide |
+| **Barre du haut** | Nouveau / Ouvrir / Enregistrer / Réseaux… (réseaux d'exemple), export de la nomenclature (CSV), annuler / rétablir, mode d'affichage (Plan, Double, 3D), langue, aide |
 | **Panneau gauche** | Quatre onglets : **Voie** (catalogue Fleischmann), **Relief** (pinceaux de terrain), **Maquettes** (décor) et **Trains** (matériel roulant et compositions) |
 | **Centre** | Le **plan** (2D, vue de dessus) et/ou la **vue 3D** |
 | **Panneau droit** | **Cabine de conduite** (commande des trains), **Propriétés** de la sélection, **Réseau** (taille du plateau, statistiques, nomenclature) |
@@ -115,9 +115,16 @@ Ouvrez l'onglet **Relief** et glissez sur le plan :
 | **Peindre** | peint le revêtement : herbe, prairie, terre, roche, sable, neige |
 
 * **Rayon** et **Intensité** règlent la taille et la vitesse du pinceau.
-* **Tunnels** : les voies gardent leur propre hauteur. Si le terrain est plus haut que la
-  voie, le train disparaît dans la colline : ajoutez des **portails de tunnel** (onglet
-  Maquettes) aux entrées.
+* **Tunnels** : les voies gardent leur propre hauteur. Là où le terrain dépasse la voie
+  de plus de 85 mm, la voie passe en **tunnel** : la vue 3D creuse une tranchée jusqu'à
+  la colline, ouvre l'entrée, construit un **portail** en pierre (portail double pour
+  deux voies parallèles) et une voûte à l'intérieur. Sur le plan, les sections en
+  tunnel sont assombries et en pointillés.
+* **Tranchées** : un terrain légèrement plus haut que la voie est creusé
+  automatiquement en 3D pour que la voie reste visible.
+* **Ponts** : une voie à plus de 20 mm au-dessus du sol repose sur des poutres
+  métalliques et des piles en pierre (aucune pile n'est posée sur une voie passant
+  dessous).
 * **Eau** : un terrain creusé sous −8 mm devient un lac ou une rivière.
 * **Créer des remblais sous les voies surélevées** remplit le terrain sous les voies en
   hauteur avec des talus réalistes, au lieu de piles.
@@ -129,13 +136,16 @@ Ouvrez l'onglet **Relief** et glissez sur le plan :
 L'onglet **Maquettes** propose des modèles HO génériques : bâtiment voyageurs, quai,
 remise à locomotives, poste d'aiguillage, château d'eau, signal sémaphore, maisons,
 maison à colombages, église, usine, grange, arbres, buissons, rochers, routes, portails
-de tunnel et voitures.
+de tunnel et voitures, ainsi que des maisons de ville avec commerces, lampadaires,
+clôtures et personnages. Les bâtiments ont des murs texturés (crépi, brique,
+colombages), des toits en tuiles, des fenêtres, des portes et des cheminées.
 
 1. Cliquez une maquette puis cliquez sur le plan pour la poser (<kbd>Q</kbd>/<kbd>E</kbd>
    tournent le fantôme).
 2. Sélectionnez une maquette posée pour changer sa rotation, son **échelle** ou sa hauteur.
    Les maquettes se posent automatiquement sur le terrain ; indiquez une hauteur pour la
-   forcer (par exemple un portail de tunnel au niveau de la voie).
+   forcer (par exemple un portail décoratif au niveau de la voie ; les portails sont
+   sinon créés automatiquement à chaque entrée de tunnel).
 
 ---
 
@@ -177,12 +187,39 @@ Les trains s'arrêtent en fin de voie et avant de heurter un autre train.
   pour construire le réseau en vrai (séparateur point-virgule, s'ouvre dans Excel/LibreOffice).
 * Le panneau **Réseau** indique la taille du plateau (modifiable), le nombre d'éléments, la
   longueur totale de voie, le nombre d'extrémités libres et la nomenclature.
-* **Exemple** charge un réseau de démonstration (ovale avec gare de croisement, voie de
-  garage, tunnel, lac).
+* **Réseaux…** ouvre la bibliothèque de réseaux d'exemple (voir §7).
 
 ---
 
-## 7. Catalogue Fleischmann Profi-Gleis
+## 7. Réseaux d'exemple
+
+| Réseau | Niveau | Contenu |
+|---|---|---|
+| **Ovale de départ** | ★☆☆ | Ovale R1, une voie de garage avec heurtoir, petite gare — 1,8 × 1,0 m |
+| **Gare de village** | ★★☆ | Ovale R2, voie d'évitement, voie de garage avec remise, tunnel sous une colline, lac — 2,4 × 1,2 m |
+| **Huit** | ★★☆ | Huit sur le croisement 36° 6160, voie de débord, lac, village — 3,2 × 0,95 m |
+| **Grande ligne à double voie** | ★★★ | Double voie R1/R2 (entraxe 63,5 mm), deux communications, gare de passage avec voie à quai, faisceau de trois voies avec remise, ville, tunnel à double voie — 3,6 × 1,6 m |
+| **Ligne de montagne** | ★★★ | Huit à deux niveaux : rampe de 3 % sur viaduc au-dessus d'un lac, passage supérieur, gare de montagne avec voie de garage, long tunnel — 3,8 × 1,1 m |
+
+Tous les réseaux d'exemple sont construits avec de vraies pièces Fleischmann : leur
+nomenclature est exportable et les boucles se referment exactement.
+
+---
+
+## 8. Vue 3D
+
+* Relief texturé (herbe, roche sur les pentes raides, sable, neige), touffes d'herbe,
+  eau animée, ballast en gravier, traverses en bois et rails à surface de roulement
+  brillante.
+* Matériel roulant détaillé : livrées avec fenêtres et inscriptions, bogies, roues à
+  rayons qui tournent, bielles des locomotives à vapeur, fumée, feux (blancs à l'avant
+  du train).
+* Caméras : **Orbite**, **Suivre** (derrière le train actif) et **Cabine** (vue du
+  conducteur, y compris dans les tunnels).
+
+---
+
+## 9. Catalogue Fleischmann Profi-Gleis
 
 | Réf. | Élément | Géométrie |
 |---|---|---|
@@ -232,7 +269,7 @@ Les longueurs sont approximatives (hors tampons) et les modèles 3D sont simplif
 
 ---
 
-## 8. Raccourcis clavier
+## 10. Raccourcis clavier
 
 | Touche | Action |
 |---|---|

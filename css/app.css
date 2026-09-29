@@ -193,3 +193,16 @@ dialog#help::backdrop { background: rgba(0, 0, 0, 0.55); }
   #left, #right-panel { border: 0; }
   .panel { overflow: visible; }
 }
+
+/* layouts dialog */
+dialog#layouts-dlg {
+  width: min(760px, 94vw); padding: 0;
+  background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: 10px;
+}
+dialog#layouts-dlg::backdrop { background: rgba(0, 0, 0, 0.55); }
+.layouts-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; padding: 14px; }
+.layout-card { display: flex; flex-direction: column; gap: 6px; text-align: left; padding: 12px; min-height: 130px; }
+.layout-card strong { font-size: 15px; }
+.layout-card .desc { color: var(--dim); font-size: 12px; line-height: 1.4; }
+.layout-card .lvl { color: #ffcf5c; font-size: 13px; }
+.layout-card .lvl em { color: var(--dim); font-style: normal; font-size: 11px; margin-left: 4px; }

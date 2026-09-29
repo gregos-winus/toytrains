@@ -22,16 +22,29 @@ plan 2D et en 3D.
   * rampes (hauteur à chaque extrémité), piles générées sous les voies surélevées ;
   * statistiques et **nomenclature** exportable en CSV.
 * **Relief** : monter, creuser, adoucir et aplanir le terrain, peindre le revêtement,
-  lacs et rivières, tunnels, remblais automatiques sous les voies surélevées.
+  lacs et rivières, remblais automatiques sous les voies surélevées.
+* **Tunnels et ponts construits automatiquement** en 3D : tranchées, entrées de tunnel
+  ouvertes avec portails en pierre (portails doubles pour la double voie) et voûtes,
+  ponts à poutres sur piles en pierre.
 * **Maquettes** : gare, quai, remise, poste d'aiguillage, château d'eau, signaux,
-  maisons, église, usine, grange, arbres, rochers, routes, portails de tunnel, voitures…
+  maisons, maisons de ville avec commerces, église, usine, grange, arbres, rochers,
+  routes, lampadaires, clôtures, personnages, portails de tunnel, voitures… avec murs
+  texturés et toits en tuiles.
+* **Matériel roulant détaillé** : livrées avec fenêtres et inscriptions, bogies, roues à
+  rayons qui tournent, bielles des locomotives à vapeur, fumée, feux.
+* **Textures procédurales** (herbe, ballast, traverses, brique, pierre, tuiles,
+  parquet…) générées dans le navigateur — aucune image à télécharger.
 * **Trains** : locomotives, voitures et wagons Fleischmann, composition de trains et
   trains prêts à rouler, régulateur avec inertie, vitesse à l'échelle en km/h, inversion
   du sens, mode navette, aiguillages talonnés, arrêt aux heurtoirs et avant collision.
 * **Vues** : plan 2D (édition) et 3D (three.js) avec caméras orbite, poursuite et cabine ;
   les aiguillages se manœuvrent dans les deux vues.
-* Sauvegarde automatique dans le navigateur, import/export `.json`, réseau d'exemple.
+* **Cinq réseaux d'exemple**, de l'ovale de départ à la grande ligne à double voie avec
+  gare et faisceau, et à la ligne de montagne à deux niveaux.
+* Sauvegarde automatique dans le navigateur, import/export `.json`.
 * Interface et documentation en **anglais et en français**.
+
+![Tunnel à double voie avec portail automatique](docs/img/tunnel.png)
 
 ## Documentation
 
@@ -86,6 +99,9 @@ js/
   editor.js                 opérations d'édition
   plan2d.js                 vue plan 2D (canvas)
   view3d.js, models3d.js    vue 3D et modèles procéduraux (three.js)
+  carve.js                  creusement du relief (tranchées, entrées de tunnel)
+  textures.js               textures procédurales (canvas)
+  layouts/                  réseaux d'exemple et outil de construction
   panels.js, main.js, app.js, i18n.js   interface utilisateur
 docs/                 guides (en, fr) et captures d'écran
 tests/                tests unitaires (node:test)
