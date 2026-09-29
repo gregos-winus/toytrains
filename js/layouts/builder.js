@@ -87,6 +87,20 @@ export class Cursor {
     return this;
   }
 
+  // Start a line with a buffer stop behind the cursor (the buffer end is
+  // at the cursor position, the track continues ahead).
+  startBuffer() {
+    this.place('6116', 1, 0);
+    return this;
+  }
+
+  // Continue from where another cursor stands (e.g. after a piece placed by
+  // another chain).
+  jump(other) {
+    this.t = { ...other.t };
+    return this;
+  }
+
   ramp(grade) {
     this.grade = grade;
     return this;
@@ -128,9 +142,9 @@ export class Builder {
     }
   }
 
-  train(name, consist, piece, s = 50, dir = 1, throttle = 0) {
+  train(name, consist, piece, s = 50, dir = 1, throttle = 0, opts = {}) {
     const L = this.layout;
-    const tr = { id: newId(L), name, consist, trail: [], throttle: 0, speed: 0, reversed: false, shuttle: false };
+    const tr = { id: newId(L), name, consist, trail: [], throttle: 0, speed: 0, reversed: false, shuttle: !!opts.shuttle };
     if (!placeTrain(L, tr, { pid: piece.id, ri: 0, s, dir })) return null;
     tr.throttle = throttle;
     L.trains.push(tr);

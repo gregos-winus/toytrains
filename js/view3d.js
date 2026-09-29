@@ -9,6 +9,7 @@ import { sceneryType } from './catalog/scenery.js';
 import { stock } from './catalog/rolling-stock.js';
 import {
   worldEndpoints, PAINTS, WATER_LEVEL, trackSamples, tunnelPortals, VAULT_HEIGHT, VAULT_HALF_WIDTH,
+  terrainHeight, TUNNEL_CLEARANCE,
 } from './model.js';
 import { carPoses, nearestTrackPoint } from './sim.js';
 import { toggleSwitch } from './editor.js';
@@ -79,6 +80,7 @@ export class View3D {
     scene.add(this.boardGroup, this.trackGroup, this.sceneryGroup, this.trainGroup, this.fxGroup);
     this.trainObjs = new Map();
     this.odo = new Map();
+    this.tunnelK = new Map();
     this.puffs = [];
 
     this.dirtyStatic = true;
@@ -483,7 +485,7 @@ export class View3D {
     this.ballastMesh = mk(ballast, new THREE.MeshStandardMaterial({ map: TX.gravel(), roughness: 1, side: THREE.DoubleSide, bumpMap: TX.gravel(), bumpScale: 0.6 }), ballastUV, true);
     mk(railTop, new THREE.MeshStandardMaterial({ color: '#d7d9dc', metalness: 0.9, roughness: 0.22, side: THREE.DoubleSide }));
     mk(railSide, new THREE.MeshStandardMaterial({ color: '#6b4a34', metalness: 0.3, roughness: 0.75, side: THREE.DoubleSide }));
-    mk(vault, new THREE.MeshStandardMaterial({ map: TX.stone('#5a5650'), color: '#3b3834', roughness: 1, envMapIntensity: 0, side: THREE.DoubleSide }), vaultUV, true);
+    mk(vault, new THREE.MeshStandardMaterial({ map: TX.stone('#5a5650'), color: '#2b2926', roughness: 1, envMapIntensity: 0, side: THREE.DoubleSide }), vaultUV, true);
     mk(girders, new THREE.MeshStandardMaterial({ color: '#3f4a52', metalness: 0.5, roughness: 0.55, side: THREE.DoubleSide }), null, true);
 
     if (sleepers.length) {
@@ -618,6 +620,11 @@ export class View3D {
     const seen = new Set();
     for (const train of L.trains) {
       const cars = carPoses(L, train);
+      // head lamps and interior lights come on while the train is in a tunnel
+      const inTunnel = cars.some((c) => terrainHeight(L.terrain, c.x, c.y) > c.z + TUNNEL_CLEARANCE);
+      const k0 = this.tunnelK.get(train.id) || 0;
+      const k = k0 + ((inTunnel ? 1 : 0) - k0) * Math.min(1, dt * 5);
+      this.tunnelK.set(train.id, k);
       const odo = train.odo || 0;
       const last = this.odo.get(train.id) ?? odo;
       const moved = odo - last;
@@ -636,7 +643,21 @@ export class View3D {
         obj.rotation.y = car.a + (car.flip ? Math.PI : 0);
         obj.rotation.z = car.flip ? -car.pitch : car.pitch;
         const dirSign = car.flip ? -1 : 1;
-        animateStock(obj, moved * dirSign, dirSign, true);
+        const role = i === 0 ? 'head' : i === cars.length - 1 ? 'tail' : 'mid';
+        animateStock(obj, moved * dirSign, dirSign, true, k, role);
+        const ud0 = obj.userData;
+        if (ud0.kind === 'loco' && ud0.bodyLen) {
+          if (!ud0.spot) {
+            const spot = new THREE.SpotLight('#fff1d2', 0, 1400, 0.55, 0.5, 0);
+            spot.castShadow = false;
+            obj.add(spot, spot.target);
+            ud0.spot = spot;
+          }
+          const lead = dirSign > 0 ? 1 : -1;
+          ud0.spot.position.set(lead * (ud0.bodyLen / 2 + 3), ud0.lampY, 0);
+          ud0.spot.target.position.set(lead * (ud0.bodyLen / 2 + 500), -10, 0);
+          ud0.spot.intensity = role === 'head' ? 40 * k : 0;
+        }
         // steam
         const ud = obj.userData;
         if (ud.chimney && train.speed > 1) {

@@ -72,7 +72,7 @@ function renderLayoutList() {
     const card = document.createElement('button');
     card.className = 'layout-card';
     const stars = '★'.repeat(def.level) + '☆'.repeat(3 - def.level);
-    card.innerHTML = `<span class="lvl" title="${t(`level${def.level}`)}">${stars} <em>${t(`level${def.level}`)}</em></span>
+    card.innerHTML = `<span class="lvl" title="${t(`level${def.level}`)}">${stars} <em>${t(`level${def.level}`)}</em><em class="size">${def.size || ''}</em></span>
       <strong></strong><span class="desc"></span>`;
     card.querySelector('strong').textContent = tr(def.name);
     card.querySelector('.desc').textContent = tr(def.desc);

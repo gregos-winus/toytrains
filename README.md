@@ -36,8 +36,11 @@ and **run Fleischmann trains** on the layout — in a 2D plan and in 3D.
   turnouts forced when trailed, stop at buffers and before collisions.
 * **Views**: 2D plan (editing) and 3D (three.js) with orbit, follow and cab cameras;
   turnouts can be switched in both views.
-* **Five example layouts**, from a starter oval to a double-track main line with
-  station and yard and a two-level mountain line.
+* **Nine example layouts** of various sizes and complexity, from a 1.3 m industrial
+  shelf layout and a point-to-point branch line to a two-level mountain line and a
+  4.8 m main station with 146 pieces and six trains.
+* **Head lamps** switch to full beam in tunnels (light cone on the vault), coach
+  interior lights come on, red tail lamps.
 * Automatic saving in the browser, `.json` import/export.
 * User interface and documentation in **English and French**.
 

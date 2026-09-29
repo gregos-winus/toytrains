@@ -32,6 +32,20 @@ test('complex layouts are really complex', () => {
   assert.ok(byId.mainline.pieces.length > 80 && turnouts(byId.mainline) >= 8);
   const heights = byId.mountain.pieces.flatMap((p) => p.h);
   assert.ok(Math.max(...heights) >= 80, 'mountain line has an upper level');
+  assert.ok(byId.hbf.pieces.length > 140 && byId.hbf.trains.length >= 6);
+  assert.ok(byId.hbf.pieces.some((p) => p.ref === '6157'), 'three-way turnout in the yard');
+  // sizes range from a shelf to a large room layout
+  const areas = LAYOUTS.map((d) => byId[d.id].board.w * byId[d.id].board.d);
+  assert.ok(Math.min(...areas) < 0.6e6 && Math.max(...areas) > 8e6);
+});
+
+test('shuttle trains run back and forth on point-to-point layouts', () => {
+  for (const id of ['industry', 'branch']) {
+    const L = LAYOUTS.find((d) => d.id === id).build();
+    let reversals = 0;
+    for (let i = 0; i < 60 * 180; i++) for (const ev of stepTrains(L, 1 / 60)) if (ev.type === 'shuttle') reversals++;
+    assert.ok(reversals >= 4, `${id}: ${reversals}`);
+  }
 });
 
 test('tunnels are detected and their mouths are open in the rendered terrain', () => {

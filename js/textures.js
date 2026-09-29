@@ -637,7 +637,16 @@ export function liverySide(st, bodyLen, bodyH) {
     const col = st.color, col2 = st.color2 || st.color;
     ctx.fillStyle = col;
     ctx.fillRect(0, 0, W, H);
+    // emissive mask: lit windows (used for interior lights in tunnels)
+    const mc = canvas(W, H);
+    const mctx = mc.getContext('2d');
+    mctx.fillStyle = '#000';
+    mctx.fillRect(0, 0, W, H);
     const glass = (x, y, w, h, r = 3) => {
+      mctx.fillStyle = '#ffdc96';
+      mctx.beginPath();
+      mctx.roundRect(x + 1, y + 1, w - 2, h - 2, r);
+      mctx.fill();
       const g = ctx.createLinearGradient(x, y, x + w * 0.4, y + h);
       g.addColorStop(0, '#5f7f9c');
       g.addColorStop(0.45, '#2a3b4d');
@@ -725,6 +734,27 @@ export function liverySide(st, bodyLen, bodyH) {
     grad.addColorStop(1, 'rgba(40,30,20,0.3)');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, H);
+    cache.set(`${key}mask`, toTexture(mc, { repeat: false }));
+    return toTexture(c, { repeat: false });
+  });
+}
+
+export function liveryMask(st, bodyLen, bodyH) {
+  liverySide(st, bodyLen, bodyH);
+  return cache.get(`livery${st.ref}${bodyLen}${bodyH}mask`);
+}
+
+// Soft round glow (head lamp halo).
+export function glowTexture() {
+  return cached('glow', () => {
+    const c = canvas(64);
+    const ctx = c.getContext('2d');
+    const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    g.addColorStop(0, 'rgba(255,250,230,1)');
+    g.addColorStop(0.25, 'rgba(255,240,200,0.55)');
+    g.addColorStop(1, 'rgba(255,230,180,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 64, 64);
     return toTexture(c, { repeat: false });
   });
 }

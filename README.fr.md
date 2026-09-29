@@ -39,8 +39,11 @@ plan 2D et en 3D.
   du sens, mode navette, aiguillages talonnés, arrêt aux heurtoirs et avant collision.
 * **Vues** : plan 2D (édition) et 3D (three.js) avec caméras orbite, poursuite et cabine ;
   les aiguillages se manœuvrent dans les deux vues.
-* **Cinq réseaux d'exemple**, de l'ovale de départ à la grande ligne à double voie avec
-  gare et faisceau, et à la ligne de montagne à deux niveaux.
+* **Neuf réseaux d'exemple** de tailles et de complexités variées, de l'embranchement
+  industriel sur étagère (1,3 m) et de la ligne secondaire en antenne jusqu'à la ligne
+  de montagne à deux niveaux et à la grande gare de 4,8 m (146 pièces, six trains).
+* **Phares** en pleins feux dans les tunnels (faisceau sur la voûte), éclairage
+  intérieur des voitures, feux rouges de queue.
 * Sauvegarde automatique dans le navigateur, import/export `.json`.
 * Interface et documentation en **anglais et en français**.
 

@@ -257,22 +257,239 @@ function mountain() {
   return L;
 }
 
+
+// -------------------------------------------------------------- industry
+// Small shelf layout (1.3 m): an industrial spur with three sidings, worked
+// by a shunter in shuttle mode.
+function industry() {
+  const L = createLayout({ width: 1300, depth: 360, name: 'Industrial spur' });
+  const b = new Builder(L);
+  b.naturalPaint();
+  const c = b.at(40, 85, 0).startBuffer().straight(1);
+  const s2 = c.turnout('6170');
+  c.straight(3).buffer();
+  s2.right('6138');
+  const s3 = s2.turnout('6170');
+  s2.straight(1).buffer();
+  s3.right('6138').buffer();
+  b.paintAll((x, y) => (y < 250 ? 2 : null));
+  b.scenery('factory', 450, 300, 0, { scale: 0.5 });
+  b.scenery('farm', 860, 305, 0, { scale: 0.55 });
+  b.scenery('watertower', 1180, 300, 0, { scale: 0.7 });
+  b.scenery('road', 150, 22, 0);
+  b.scenery('road', 350, 22, 0);
+  b.scenery('car', 300, 22, 0);
+  b.scenery('fence', 700, 30, 0);
+  b.scenery('fence', 820, 30, 0);
+  for (const x of [240, 640, 1040]) b.scenery('lamp', x, 250, 0);
+  b.scenery('people', 620, 270, 0);
+  b.trees([[40, 300, 'conifer'], [1260, 30, 'bush'], [1000, 30, 'bush']]);
+  b.train('V 60 (shuttle)', ['4225', '5205', '5220'], c.pieces[4], 100, 1, 0.35, { shuttle: true });
+  b.train('BR 64', ['4064'], s2.pieces[2], 150, 1, 0);
+  touch(L);
+  return L;
+}
+
+// ---------------------------------------------------------------- branch
+// Point-to-point branch line (3 m): terminus with run-round loop and goods
+// siding, an S-curve through a tunnel and a halt at the far end. The train
+// runs in shuttle mode.
+function branch() {
+  const L = createLayout({ width: 3050, depth: 650, name: 'Branch line' });
+  const b = new Builder(L);
+  b.hill(2215, 320, 270, 240, 40);
+  b.hill(2450, 560, 200, 90);
+  b.smooth(2215, 330, 300, 2);
+  b.hill(700, 600, 250, 60);
+  const c = b.at(60, 230, 0).startBuffer().straight(2);
+  const goods = c.turnout('6171');
+  const loop = c.turnout('6170');
+  c.straight(3).trail('6171', 'straight');
+  loop.right('6138').straight(1).right('6138');
+  c.straight(1).left('6127', 2).right('6127', 2).straight(2).buffer();
+  goods.left('6138').straight(2).buffer();
+  b.flattenUnder([...b.all.slice(0, 12), ...goods.pieces, ...loop.pieces], 60);
+  b.naturalPaint();
+  b.scenery('platform', 365, 277);
+  b.scenery('station', 365, 380, 0, { scale: 0.8 });
+  b.scenery('people', 340, 277);
+  b.scenery('lamp', 250, 277);
+  b.scenery('lamp', 480, 277);
+  b.scenery('farm', 1200, 110, 0, { scale: 0.8 });
+  b.scenery('signal', 720, 270, 0);
+  b.scenery('platform', 2700, 343);
+  b.scenery('house', 2700, 250, 0, { scale: 0.6 });
+  b.scenery('people', 2720, 343);
+  b.scenery('timbered', 950, 450, 5);
+  b.scenery('house', 1150, 470, -8);
+  b.scenery('church', 1500, 520, 0, { scale: 0.7 });
+  b.trees([[1750, 120], [1850, 560, 'conifer'], [2050, 520, 'conifer'], [2300, 150, 'conifer'], [2150, 120, 'conifer'],
+    [2950, 120], [2950, 560, 'bush'], [100, 560, 'conifer'], [600, 80, 'bush'], [1400, 400, 'bush']]);
+  b.train('BR 64 (shuttle)', ['4064', '5125'], c.pieces[2], 150, 1, 0.45, { shuttle: true });
+  b.train('V 60', ['4225', '5205'], goods.pieces[2], 150, 1, 0);
+  touch(L);
+  return L;
+}
+
+// --------------------------------------------------------------- express
+// Double-track express line on large radii (R3 inside, R4 outside, 18°
+// curves 6131/6133) with a pair of crossovers.
+function express() {
+  const L = createLayout({ width: 3200, depth: 1350, name: 'Express line (large radii)' });
+  const b = new Builder(L);
+  const x0 = 800, cy = 680;
+  b.valley(1600, 700, 260, 45);
+  b.smooth(1600, 700, 320, 3);
+  b.hill(2950, 1250, 300, 80);
+  b.hill(250, 120, 250, 60);
+  b.naturalPaint();
+  const o = b.at(x0, cy - 547, 0);
+  o.straight(8).left('6133', 10).straight(1);
+  const i = b.at(x0, cy - 483.5, 0);
+  i.straight(8).left('6131', 10);
+  const x1o = i.turnout('6171');
+  i.straight(5);
+  const x2o = i.turnout('6171');
+  i.straight(1).left('6131', 10);
+  x1o.trail('6171', 'branch');
+  x2o.trail('6171', 'branch');
+  o.jump(x1o).straight(5).jump(x2o).left('6133', 10);
+  b.flattenUnder(b.all, 60);
+  b.naturalPaint();
+  b.scenery('farm', 1200, 950, 0);
+  b.scenery('fence', 1200, 880, 0);
+  b.scenery('house', 2000, 950, 180);
+  b.scenery('timbered', 2150, 900, 170);
+  b.scenery('church', 1900, 460, 0, { scale: 0.8 });
+  b.scenery('signalbox', 1600, 1270, 180);
+  b.scenery('signal', 2300, 1100, 180);
+  b.scenery('signal', 900, 70, 0);
+  b.trees([[1400, 500], [1450, 880, 'bush'], [1750, 880], [1300, 600, 'bush'], [2250, 600], [2350, 750, 'conifer'],
+    [950, 700, 'conifer'], [1000, 850], [3050, 300], [3100, 600, 'conifer'], [120, 800], [150, 1200, 'conifer'],
+    [1600, 40, 'bush'], [2400, 40], [600, 1300, 'bush']]);
+  b.train('TEE « Rheingold »', ['4375', '5161', '5161', '5161'], o.pieces[4], 100, 1, 0.5);
+  b.train('D-Zug BR 01', ['4170', '5160', '5160', '5160'], i.pieces[4], 100, -1, 0.45);
+  touch(L);
+  return L;
+}
+
+// -------------------------------------------------------------------- hbf
+// Large layout (4.8 x 1.8 m): double track R3/R4 with two crossovers, a
+// four-track through station (two platform loops), a freight yard fanned
+// out by a three-way turnout, an engine depot, a town, a double-track
+// tunnel and a river crossed on bridges.
+function hbf() {
+  const L = createLayout({ width: 4800, depth: 1800, name: 'Main station (Hauptbahnhof)' });
+  const b = new Builder(L);
+  const x0 = 900, cy = 927;
+  const yO = cy - 547, yI = cy - 483.5;
+  b.hill(420, 930, 480, 260);
+  b.smooth(420, 930, 520, 2);
+  for (let y = 1800; y >= 0; y -= 25) b.valley(4330 + Math.sin(y / 260) * 60, y, 80, 14, 3);
+  b.naturalPaint();
+
+  // outer track with platform loop P1 (south, outside)
+  const o = b.at(x0, yO, 0);
+  o.straight(2).straight(1, '6103');
+  const p1 = o.turnout('6171');
+  o.straight(8).trail('6170', 'straight');
+  o.straight(2).straight(1, '6103').left('6133', 10).straight(1);
+  p1.straight(1, '6103').left('6138').straight(4).straight(2, '6102').left('6138').straight(1, '6103');
+  // inner track with platform loop P2 (inside)
+  const i = b.at(x0, yI, 0);
+  i.straight(2).straight(1, '6103');
+  const p2 = i.turnout('6170');
+  i.straight(8).trail('6171', 'straight');
+  i.straight(2).straight(1, '6103').left('6131', 10);
+  p2.straight(1, '6103').right('6138').straight(4).straight(2, '6102').right('6138').straight(1, '6103');
+  // north side: crossovers and yard lead
+  const x1o = i.turnout('6171');
+  const yard = i.turnout('6170');
+  i.straight(10);
+  const x2o = i.turnout('6171');
+  i.straight(2).left('6131', 10);
+  x1o.trail('6171', 'branch');
+  x2o.trail('6171', 'branch');
+  o.jump(x1o).straight(11).jump(x2o).straight(1).left('6133', 10);
+  // freight yard: two-step lead, three-way turnout, depot
+  yard.right('6138').left('6138').right('6138');
+  const [yl, yr] = yard.threeWay('6157');
+  yard.straight(4).buffer();
+  yl.right('6138');
+  const dep = yl.turnout('6170');
+  yl.straight(3).buffer();
+  dep.right('6138').straight(2).buffer();
+  yr.left('6138').straight(3).buffer();
+
+  b.flattenUnder(b.all.filter((p) => p.x > 1000 && p.x < 3800), 60);
+  b.naturalPaint();
+
+  // station
+  b.scenery('station', 2400, 165, 0, { scale: 1.4 });
+  b.scenery('platform', 2200, 333); b.scenery('platform', 2600, 333);
+  b.scenery('platform', 2200, 490.6); b.scenery('platform', 2600, 490.6);
+  b.scenery('platform', 2400, 241, 0, { scale: 1 });
+  for (let k = 0; k < 7; k++) { b.scenery('lamp', 1950 + k * 150, 333); b.scenery('lamp', 1950 + k * 150, 490.6); }
+  b.scenery('people', 2300, 333); b.scenery('people', 2550, 490.6); b.scenery('people', 2400, 241);
+  b.scenery('signalbox', 1250, 250); b.scenery('signalbox', 3600, 250);
+  b.scenery('signal', 1250, 330, 0); b.scenery('signal', 3560, 420, 180);
+  // depot and yard
+  b.scenery('engineshed', 1450, 1157.3, 0);
+  b.scenery('watertower', 1750, 1090);
+  b.scenery('signalbox', 3200, 1180, 180);
+  // town
+  const town = [['townhouse', 1600, 700, 0], ['townhouse2', 1700, 700, 0], ['townhouse', 1800, 700, 0], ['townhouse2', 1900, 700, 0],
+    ['church', 2300, 820, 0], ['house', 2650, 700, 0], ['timbered', 2800, 710, 0], ['house', 2950, 700, 0],
+    ['factory', 3300, 860, 0], ['townhouse', 1600, 900, 180], ['townhouse2', 1700, 900, 180], ['house', 1900, 900, 180]];
+  for (const [k, x, y, r] of town) b.scenery(k, x, y, r);
+  for (let x = 1500; x < 3100; x += 200) b.scenery('road', x + 100, 610, 0);
+  for (let x = 1500; x < 2100; x += 200) b.scenery('road', x + 100, 800, 0);
+  b.scenery('car', 1700, 610, 0); b.scenery('car', 2500, 615, 180); b.scenery('car', 1800, 800, 0);
+  for (let k = 0; k < 9; k++) b.scenery('lamp', 1520 + k * 180, 645, 0);
+  b.scenery('farm', 3000, 1650, 0); b.scenery('fence', 3000, 1580, 0);
+  b.trees([[150, 400, 'conifer'], [200, 600, 'conifer'], [150, 1300, 'conifer'], [260, 1500, 'conifer'], [500, 1650, 'conifer'],
+    [4600, 300], [4650, 700, 'conifer'], [4600, 1200], [4650, 1600, 'bush'], [4100, 1700], [4050, 80],
+    [1200, 60], [1600, 50, 'bush'], [3200, 60], [3600, 70, 'bush'], [1300, 1700], [2000, 1720, 'bush'], [2500, 1700],
+    [1300, 700, 'bush'], [3500, 700], [3550, 1000, 'conifer'], [1350, 1000]]);
+
+  b.train('TEE « Rheingold »', ['4375', '5161', '5161', '5161'], o.pieces[5], 100, 1, 0.45);
+  b.train('D-Zug BR 01', ['4170', '5160', '5160', '5160'], i.pieces[6], 100, -1, 0.4);
+  b.train('Güterzug BR 50', ['4175', '5205', '5220', '5205', '5205'], p1.pieces[6], 100, 1, 0);
+  b.train('Nahverkehr BR 218', ['4234', '5125', '5125'], p2.pieces[6], 100, 1, 0);
+  b.train('Rangierlok V 60', ['4225', '5205'], dep.pieces[2], 190, 1, 0);
+  b.train('BR 64', ['4064'], yr.pieces[2], 150, 1, 0);
+  touch(L);
+  return L;
+}
+
 export const LAYOUTS = [
-  { id: 'starter', level: 1, build: starter,
+  { id: 'industry', level: 1, size: '1.3 × 0.36 m', build: industry,
+    name: N('Industrial spur', 'Embranchement industriel'),
+    desc: N('Small shelf layout: three factory sidings worked by a V 60 shunter in shuttle mode.', 'Petit réseau sur étagère : trois voies d’usine desservies par un locotracteur V 60 en navette.') },
+  { id: 'starter', level: 1, size: '1.8 × 1.0 m', build: starter,
     name: N('Starter oval', 'Ovale de départ'),
     desc: N('R1 oval with a siding and a small station. Ideal to discover the simulator.', 'Ovale R1 avec une voie de garage et une petite gare. Idéal pour découvrir le simulateur.') },
-  { id: 'village', level: 2, build: () => buildExampleLayout('Village station'),
+  { id: 'branch', level: 2, size: '3.05 × 0.65 m', build: branch,
+    name: N('Branch line', 'Ligne secondaire'),
+    desc: N('Point-to-point: terminus with run-round loop and goods siding, S-curve through a tunnel, halt at the far end. BR 64 shuttle.', 'Ligne en antenne : terminus avec voie de contournement et voie de débord, courbe en S sous tunnel, halte au bout. Navette BR 64.') },
+  { id: 'village', level: 2, size: '2.4 × 1.2 m', build: () => buildExampleLayout('Village station'),
     name: N('Village station', 'Gare de village'),
     desc: N('R2 oval with a passing loop, a siding with engine shed, a tunnel under the hill and a lake.', 'Ovale R2 avec voie d’évitement, voie de garage et remise, tunnel sous la colline et lac.') },
-  { id: 'figure8', level: 2, build: figure8,
+  { id: 'figure8', level: 2, size: '3.2 × 0.95 m', build: figure8,
     name: N('Figure of eight', 'Huit'),
     desc: N('Figure of eight on a 36° crossing (6160), goods siding, lake and village.', 'Huit sur un croisement 36° (6160), voie de débord, lac et village.') },
-  { id: 'mainline', level: 3, build: mainline,
+  { id: 'express', level: 2, size: '3.2 × 1.35 m', build: express,
+    name: N('Express line (large radii)', 'Ligne rapide (grands rayons)'),
+    desc: N('Double track on R3/R4 curves (6131/6133) with crossovers: TEE and express trains in both directions.', 'Double voie en courbes R3/R4 (6131/6133) avec communications : TEE et express dans les deux sens.') },
+  { id: 'mainline', level: 3, size: '3.6 × 1.6 m', build: mainline,
     name: N('Double-track main line', 'Grande ligne à double voie'),
     desc: N('Double track R1/R2, two crossovers, through station with platform loop, three-track yard, engine shed, town and double-track tunnel.', 'Double voie R1/R2, deux communications, gare de passage avec voie à quai, faisceau de trois voies, remise, ville et tunnel à double voie.') },
-  { id: 'mountain', level: 3, build: mountain,
+  { id: 'mountain', level: 3, size: '3.8 × 1.1 m', build: mountain,
     name: N('Mountain line (two levels)', 'Ligne de montagne (deux niveaux)'),
     desc: N('Two-level figure of eight: 3 % climb on a viaduct over a lake, crossing over itself, mountain station and tunnel.', 'Huit à deux niveaux : rampe de 3 % sur viaduc au-dessus d’un lac, passage supérieur, gare de montagne et tunnel.') },
+  { id: 'hbf', level: 3, size: '4.8 × 1.8 m', build: hbf,
+    name: N('Main station', 'Grande gare'),
+    desc: N('Large layout: double track R3/R4, four-track station with two platform loops, yard with three-way turnout, engine depot, town, double tunnel and river bridges. Six trains.', 'Grand réseau : double voie R3/R4, gare à quatre voies avec deux voies à quai, faisceau avec aiguillage triple, dépôt, ville, tunnel double et ponts sur la rivière. Six trains.') },
 ];
 
 export function layoutById(id) {

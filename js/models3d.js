@@ -550,22 +550,28 @@ function buffersAndCouplers(g, L, y = 10) {
   }
 }
 
+// Head lamps at both ends. Each end gets its own emissive material and
+// halo sprites (only visible in tunnels); `ud.lampY` is used to place the
+// beam of the spot light.
 function lights(g, ud, L, y, zs = [-9, 9], topY = null) {
+  ud.halos = { front: [], rear: [] };
+  ud.lampY = y;
+  ud.bodyLen = L;
+  const haloMat = new THREE.SpriteMaterial({ map: TX.glowTexture(), color: '#fff3d6', transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 });
   for (const sx of [1, -1]) {
-    const matL = new THREE.MeshStandardMaterial({ color: '#dddddd', emissive: '#000000', emissiveIntensity: 1.5 });
-    const list = [];
-    for (const z of zs) {
+    const matL = new THREE.MeshStandardMaterial({ color: '#dddddd', emissive: '#000000', emissiveIntensity: 1 });
+    const pos = zs.map((z) => [y, z]);
+    if (topY != null) pos.push([topY, 0]);
+    for (const [py, z] of pos) {
       const l = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 1, 10), matL);
       l.rotation.z = Math.PI / 2;
-      l.position.set(sx * (L / 2 + 0.3), y, z);
+      l.position.set(sx * (L / 2 + 0.3), py, z);
       g.add(l);
-      list.push(l);
-    }
-    if (topY != null) {
-      const l = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 1, 10), matL);
-      l.rotation.z = Math.PI / 2;
-      l.position.set(sx * (L / 2 + 0.3), topY, 0);
-      g.add(l);
+      const halo = new THREE.Sprite(haloMat.clone());
+      halo.position.set(sx * (L / 2 + 1.5), py, z);
+      halo.scale.setScalar(9);
+      g.add(halo);
+      ud.halos[sx > 0 ? 'front' : 'rear'].push(halo);
     }
     if (sx > 0) ud.lightFront = matL; else ud.lightRear = matL;
   }
@@ -574,8 +580,21 @@ function lights(g, ud, L, y, zs = [-9, 9], topY = null) {
 // Side livery panels on both sides of a box body.
 function liveryPanels(g, st, L, h, y, zHalf) {
   const tex = TX.liverySide(st, L, h);
-  const front = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.45, metalness: 0.1 });
+  const lit = st.style === 'coach';
+  const front = new THREE.MeshStandardMaterial({
+    map: tex, roughness: 0.45, metalness: 0.1,
+    ...(lit ? { emissiveMap: TX.liveryMask(st, L, h), emissive: '#ffe2a6', emissiveIntensity: 0 } : {}),
+  });
   const back = front.clone();
+  if (lit) {
+    back.emissiveMap = front.emissiveMap.clone();
+    back.emissiveMap.wrapS = THREE.RepeatWrapping;
+    back.emissiveMap.repeat.x = -1;
+    back.emissiveMap.offset.x = 1;
+    back.emissiveMap.needsUpdate = true;
+    const ud = g.userData;
+    ud.windowMats = [front, back];
+  }
   back.map = tex.clone();
   back.map.wrapS = THREE.RepeatWrapping;
   back.map.repeat.x = -1;
@@ -900,7 +919,7 @@ export function buildStock(st) {
 
 // Per-frame animation of wheels, rods and lights. `travel` is the distance
 // moved since last frame along the vehicle's +x (negative when backwards).
-export function animateStock(obj, travel, leading, running) {
+export function animateStock(obj, travel, leading, running, tunnel = 0, role = 'head') {
   const ud = obj.userData;
   if (!ud || !ud.wheels) return;
   ud.angle = (ud.angle || 0) - travel;
@@ -921,9 +940,20 @@ export function animateStock(obj, travel, leading, running) {
       r.mesh.position.y = r.cy + py;
     }
   }
+  // head lamps: dim in daylight, full beam in tunnels; red tail lamps
   if (ud.lightFront && ud.kind === 'loco') {
-    const on = running;
-    ud.lightFront.emissive.set(on && leading > 0 ? '#fff4d0' : '#000000');
-    ud.lightRear.emissive.set(on && leading < 0 ? '#fff4d0' : '#000000');
+    const front = leading > 0 ? ud.lightFront : ud.lightRear;
+    const rear = leading > 0 ? ud.lightRear : ud.lightFront;
+    const head = running && role === 'head';
+    front.emissive.set(head ? '#fff4d0' : '#000000');
+    front.emissiveIntensity = 0.6 + 2.6 * tunnel;
+    rear.emissive.set(running && role === 'tail' ? '#ff2a1a' : '#000000');
+    rear.emissiveIntensity = 0.8 + 1.5 * tunnel;
+    const hf = leading > 0 ? ud.halos.front : ud.halos.rear;
+    const hr = leading > 0 ? ud.halos.rear : ud.halos.front;
+    for (const h of hf) { h.material.opacity = head ? 0.95 * tunnel : 0; h.visible = h.material.opacity > 0.01; }
+    for (const h of hr) h.visible = false;
   }
+  // interior lights of coaches
+  if (ud.windowMats) for (const m of ud.windowMats) m.emissiveIntensity = 1.4 * tunnel;
 }

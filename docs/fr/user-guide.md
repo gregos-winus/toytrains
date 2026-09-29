@@ -195,11 +195,15 @@ Les trains s'arrêtent en fin de voie et avant de heurter un autre train.
 
 | Réseau | Niveau | Contenu |
 |---|---|---|
+| **Embranchement industriel** | ★☆☆ | Réseau sur étagère, trois voies d'usine, locotracteur V 60 en navette — 1,3 × 0,36 m |
 | **Ovale de départ** | ★☆☆ | Ovale R1, une voie de garage avec heurtoir, petite gare — 1,8 × 1,0 m |
+| **Ligne secondaire** | ★★☆ | Ligne en antenne : terminus avec voie de contournement et voie de débord, courbe en S sous tunnel, halte ; navette BR 64 — 3,05 × 0,65 m |
 | **Gare de village** | ★★☆ | Ovale R2, voie d'évitement, voie de garage avec remise, tunnel sous une colline, lac — 2,4 × 1,2 m |
 | **Huit** | ★★☆ | Huit sur le croisement 36° 6160, voie de débord, lac, village — 3,2 × 0,95 m |
+| **Ligne rapide (grands rayons)** | ★★☆ | Double voie en courbes R3/R4 (6131/6133), communications, TEE et express dans les deux sens — 3,2 × 1,35 m |
 | **Grande ligne à double voie** | ★★★ | Double voie R1/R2 (entraxe 63,5 mm), deux communications, gare de passage avec voie à quai, faisceau de trois voies avec remise, ville, tunnel à double voie — 3,6 × 1,6 m |
 | **Ligne de montagne** | ★★★ | Huit à deux niveaux : rampe de 3 % sur viaduc au-dessus d'un lac, passage supérieur, gare de montagne avec voie de garage, long tunnel — 3,8 × 1,1 m |
+| **Grande gare** | ★★★ | 146 pièces : double voie R3/R4, gare à quatre voies avec deux voies à quai, faisceau avec aiguillage triple, dépôt, ville, tunnel double, ponts sur la rivière, six trains — 4,8 × 1,8 m |
 
 Tous les réseaux d'exemple sont construits avec de vraies pièces Fleischmann : leur
 nomenclature est exportable et les boucles se referment exactement.
@@ -212,8 +216,11 @@ nomenclature est exportable et les boucles se referment exactement.
   eau animée, ballast en gravier, traverses en bois et rails à surface de roulement
   brillante.
 * Matériel roulant détaillé : livrées avec fenêtres et inscriptions, bogies, roues à
-  rayons qui tournent, bielles des locomotives à vapeur, fumée, feux (blancs à l'avant
-  du train).
+  rayons qui tournent, bielles des locomotives à vapeur, fumée.
+* Feux : feux blancs à l'avant du train et feux rouges sur une locomotive placée en
+  queue. **Dans les tunnels**, les phares passent en pleins feux (halo et faisceau
+  éclairant la voûte) et l'éclairage intérieur des voitures s'allume ; ils se
+  rabaissent à la sortie du tunnel.
 * Caméras : **Orbite**, **Suivre** (derrière le train actif) et **Cabine** (vue du
   conducteur, y compris dans les tunnels).
 

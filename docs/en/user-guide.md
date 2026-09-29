@@ -184,11 +184,15 @@ Trains stop at the end of the track and when they would hit another train.
 
 | Layout | Level | Content |
 |---|---|---|
+| **Industrial spur** | ★☆☆ | Shelf layout, three factory sidings, V 60 shunter in shuttle mode — 1.3 × 0.36 m |
 | **Starter oval** | ★☆☆ | R1 oval, one siding with buffer stop, small station — 1.8 × 1.0 m |
+| **Branch line** | ★★☆ | Point to point: terminus with run-round loop and goods siding, S-curve in a tunnel, halt; BR 64 shuttle — 3.05 × 0.65 m |
 | **Village station** | ★★☆ | R2 oval, passing loop, siding with engine shed, tunnel under a hill, lake — 2.4 × 1.2 m |
 | **Figure of eight** | ★★☆ | Figure of eight on the 36° crossing 6160, goods siding, lake, village — 3.2 × 0.95 m |
+| **Express line (large radii)** | ★★☆ | Double track on R3/R4 curves (6131/6133), crossovers, TEE and express in both directions — 3.2 × 1.35 m |
 | **Double-track main line** | ★★★ | Double track R1/R2 (63.5 mm apart), two crossovers, through station with a platform loop, three-track yard with engine shed, town, double-track tunnel — 3.6 × 1.6 m |
 | **Mountain line** | ★★★ | Two-level figure of eight: 3 % climb on a viaduct over a lake, crossing over itself, mountain station with siding, long tunnel — 3.8 × 1.1 m |
+| **Main station** | ★★★ | 146 pieces: double track R3/R4, four-track station with two platform loops, yard with three-way turnout, engine depot, town, double tunnel, river bridges, six trains — 4.8 × 1.8 m |
 
 All example layouts are made of real Fleischmann pieces: their parts list can be
 exported and the loops close exactly.
@@ -200,8 +204,11 @@ exported and the loops close exactly.
 * Textured terrain (grass, rock on steep slopes, sand, snow), grass tufts, animated
   water, gravel ballast, wooden sleepers and rails with a bright running surface.
 * Detailed rolling stock: liveries with windows and lettering, bogies, spoked wheels
-  that turn, steam-locomotive coupling and connecting rods, smoke, head lamps (white at
-  the front of the train).
+  that turn, steam-locomotive coupling and connecting rods, smoke.
+* Lights: white head lamps at the front of the train and red tail lamps on a locomotive
+  at the rear. **In tunnels** the head lamps switch to full beam (glow and a light cone
+  on the vault) and the coach interior lights come on; they dim again when the train
+  leaves the tunnel.
 * Cameras: **Orbit**, **Follow** (behind the active train) and **Cab** (driver's view,
   even through the tunnels).
 
