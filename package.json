@@ -1,0 +1,11 @@
+{
+  "name": "ho-railway-simulator",
+  "version": "1.0.0",
+  "description": "HO scale model railway planner and simulator using the Fleischmann Profi-Gleis track system",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "start": "python3 -m http.server 8080"
+  }
+}

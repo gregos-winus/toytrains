@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HO Railway Simulator — Fleischmann Profi-Gleis</title>
+  <meta name="description" content="Design HO scale model railway layouts with Fleischmann Profi-Gleis track, sculpt the relief, place buildings and run trains in 2D and 3D.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23a4262c'/%3E%3Cpath d='M14 44h36M14 50h36' stroke='%23fff' stroke-width='3'/%3E%3Crect x='16' y='18' width='32' height='20' rx='4' fill='%23e8dcb5'/%3E%3Ccircle cx='24' cy='42' r='4' fill='%23222'/%3E%3Ccircle cx='40' cy='42' r='4' fill='%23222'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/app.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three/build/three.module.js",
+        "three/addons/": "./vendor/three/examples/jsm/",
+        "marked": "./vendor/marked/marked.esm.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand">
+      <span class="logo">🚂</span>
+      <div>
+        <div class="title" data-i18n="appTitle">HO Railway Simulator</div>
+        <div class="subtitle" data-i18n="appSubtitle">Fleischmann Profi-Gleis</div>
+      </div>
+    </div>
+    <nav class="actions">
+      <button id="btn-new" data-i18n="new">New</button>
+      <button id="btn-open" data-i18n="open">Open…</button>
+      <button id="btn-save" data-i18n="save">Save</button>
+      <button id="btn-example" data-i18n="example">Example</button>
+      <button id="btn-csv" data-i18n="exportCsv">Parts list (CSV)</button>
+      <span class="sep"></span>
+      <button id="btn-undo" data-i18n-title="undo" title="Undo">↶</button>
+      <button id="btn-redo" data-i18n-title="redo" title="Redo">↷</button>
+    </nav>
+    <div class="seg" id="viewmode">
+      <button data-view="2d" data-i18n="view2d">Plan</button>
+      <button data-view="split" data-i18n="viewSplit">Split</button>
+      <button data-view="3d" data-i18n="view3d">3D</button>
+    </div>
+    <div class="right">
+      <select id="lang" aria-label="Language">
+        <option value="en">English</option>
+        <option value="fr">Français</option>
+      </select>
+      <button id="btn-help" data-i18n="help">Help</button>
+    </div>
+    <input type="file" id="file-input" accept=".json,application/json" hidden>
+  </header>
+
+  <main id="main">
+    <aside id="left">
+      <div id="tabs">
+        <button data-tab="tracks" data-i18n="tabTracks">Track</button>
+        <button data-tab="terrain" data-i18n="tabTerrain">Relief</button>
+        <button data-tab="scenery" data-i18n="tabScenery">Models</button>
+        <button data-tab="trains" data-i18n="tabTrains">Trains</button>
+      </div>
+      <div id="left-panel" class="panel"></div>
+    </aside>
+
+    <section id="views" class="split">
+      <div id="plan-wrap" class="view">
+        <canvas id="plan"></canvas>
+        <div class="overlay tl">
+          <label class="check"><input type="checkbox" id="chk-refs" checked> <span data-i18n="showRefs">Show references</span></label>
+          <label class="check"><input type="checkbox" id="chk-grid" checked> <span data-i18n="showGrid">Grid</span></label>
+          <button id="btn-fit" class="small" title="Fit">⤢</button>
+        </div>
+        <div id="status" class="overlay bl"></div>
+      </div>
+      <div id="three-wrap" class="view">
+        <div class="overlay tl seg" id="cammode">
+          <button data-cam="orbit" data-i18n="camOrbit">Orbit</button>
+          <button data-cam="follow" data-i18n="camFollow">Follow</button>
+          <button data-cam="cab" data-i18n="camCab">Cab</button>
+        </div>
+      </div>
+    </section>
+
+    <aside id="right-panel" class="panel"></aside>
+  </main>
+
+  <div id="toasts"></div>
+
+  <dialog id="help">
+    <div class="help-head">
+      <div class="seg" id="help-lang">
+        <button data-lang="en">English</button>
+        <button data-lang="fr">Français</button>
+      </div>
+      <button id="help-close" data-i18n="close">Close</button>
+    </div>
+    <article id="help-body" class="markdown"></article>
+  </dialog>
+
+  <noscript>This application needs JavaScript. / Cette application nécessite JavaScript.</noscript>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
